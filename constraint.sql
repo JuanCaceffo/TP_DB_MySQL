@@ -10,7 +10,3 @@ ADD CONSTRAINT fk_id_trabajo FOREIGN KEY (id_trabajo) REFERENCES TRABAJO (id_tra
 ADD CONSTRAINT fk_id_localidad FOREIGN KEY (id_localidad) REFERENCES LOCALIDAD (id_localidad)
 ON DELETE CASCADE
 ON UPDATE CASCADE;
-
-
-
-
