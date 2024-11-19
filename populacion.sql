@@ -147,18 +147,3 @@ INSERT INTO HOBBY_INTEGRANTE (id_integrante, id_hobby) VALUES
 
 -- DOCENTE_MATERIA
 INSERT INTO DOCENTE_MATERIA (id_docente, id_materia) VALUES (46,14), (47,14), (48,14);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
