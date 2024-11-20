@@ -1,15 +1,5 @@
 -- a) Crear un reporte que muestre, por cada localidad, el hobby
 -- predominante y la cantidad de alumnos que lo practican.
-
--- Esta query no obtiene el resultado esperado
-SELECT l.nombre AS Localidad, h.nombre AS Hobby_mas_comun, COUNT(hi.id_hobby) AS Total_alumnos FROM HOBBY_INTEGRANTE hi
-JOIN INTEGRANTE i ON (hi.id_integrante = i.id_integrante)
-JOIN HOBBY h ON (hi.id_hobby = h.id_hobby)
-JOIN LOCALIDAD l ON (i.id_localidad = l.id_localidad)
-GROUP BY Localidad, h.nombre;
--- HAVING (Total_alumnos > 3);
-
--- Esta a priori funciona correctamente pero la veo muy rebuscada
 SELECT Localidad, Hobby_mas_comun, Total_alumnos FROM (
     SELECT 
         l.nombre AS Localidad, 
@@ -23,13 +13,23 @@ SELECT Localidad, Hobby_mas_comun, Total_alumnos FROM (
     GROUP BY l.nombre, h.nombre
 ) sub WHERE rn = 1;
 
-
-
-
+-- b) Generar un análisis que incluya la cantidad de materias en curso
+-- por los alumnos y que detalle su experiencia previa en bases de datos
+-- (dividida entre relacional y no relacional). Top 5
+SELECT 
+i.apellido AS Alumno, 
+COUNT(em.id_materia) AS 'Materias_en_curso', 
+IF(e.db_no_relacional = 1, 'Sí', 'No') AS db_no_relacional,
+IF(e.db_relacional = 1, 'Sí', 'No') AS db_relacional
+FROM ESTUDIANTE_MATERIA em
+JOIN INTEGRANTE i ON i.id_integrante = em.id_estudiante
+JOIN ESTUDIANTE e ON e.id_integrante = em.id_estudiante
+GROUP BY em.id_estudiante, i.apellido, e.db_no_relacional, e.db_relacional
+ORDER BY i.id_integrante ASC
+LIMIT 5;
 
 -- c) Identificar la materia más popular en cada grupo de estudio y el
 -- porcentaje de alumnos de cada grupo que está inscrito en esas materias.
-
 -- * 20 por regla de 3.... cantidad x 100% / 5 (max grupo)
 SELECT 
 m.nombre, 
