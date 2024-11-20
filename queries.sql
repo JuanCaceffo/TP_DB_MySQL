@@ -77,3 +77,45 @@ JOIN ESTUDIANTE_MATERIA AS em ON e.id_integrante = em.id_estudiante
 JOIN LOCALIDAD AS l ON i.id_localidad = l.id_localidad
 GROUP BY l.nombre
 ORDER BY Total_alumnos DESC;
+
+
+
+/*
+b) Generar un reporte que muestre qué alumnos pueden actuar como
+mentores de otros (match), basándose en afinidades de intereses y
+experiencia en temas específicos (como bases de datos). Se
+muestran alumnos junto a posibles mentores con experiencia en
+áreas similares.
+*/
+
+
+
+SELECT 
+    mentor_integrante.apellido AS Mentor_Apellido,
+    mentee_integrante.apellido AS Mentee_Apellido,
+    GROUP_CONCAT(hobby.nombre) AS Hobbies_Compartidos,
+    estudiante_mentor.db_relacional AS Mentor_DB_Relacional,
+    estudiante_mentor.db_no_relacional AS Mentor_DB_No_Relacional
+FROM 
+    HOBBY_INTEGRANTE hi_mentor
+INNER JOIN 
+    HOBBY_INTEGRANTE hi_mentee 
+    ON hi_mentor.id_hobby = hi_mentee.id_hobby 
+    AND hi_mentor.id_integrante != hi_mentee.id_integrante
+INNER JOIN 
+    INTEGRANTE mentor_integrante ON hi_mentor.id_integrante = mentor_integrante.id_integrante
+INNER JOIN 
+    INTEGRANTE mentee_integrante ON hi_mentee.id_integrante = mentee_integrante.id_integrante
+INNER JOIN 
+    HOBBY hobby ON hi_mentor.id_hobby = hobby.id_hobby
+INNER JOIN 
+    ESTUDIANTE estudiante_mentor ON mentor_integrante.id_integrante = estudiante_mentor.id_integrante
+INNER JOIN 
+    ESTUDIANTE estudiante_mentee ON mentee_integrante.id_integrante = estudiante_mentee.id_integrante
+WHERE 
+    estudiante_mentor.db_relacional > estudiante_mentee.db_relacional
+    OR estudiante_mentor.db_no_relacional > estudiante_mentee.db_no_relacional
+GROUP BY 
+    mentor_integrante.id_integrante, mentee_integrante.id_integrante
+ORDER BY 
+    Mentor_Apellido, Mentee_Apellido;
