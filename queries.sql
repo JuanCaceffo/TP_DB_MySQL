@@ -31,18 +31,19 @@ LIMIT 5;
 -- c) Identificar la materia más popular en cada grupo de estudio y el
 -- porcentaje de alumnos de cada grupo que está inscrito en esas materias.
 -- * 20 por regla de 3.... cantidad x 100% / 5 (max grupo)
-SELECT 
-m.nombre, 
-g.nombre, 
-COUNT(i.id_integrante) as total_alumno, 
-CONCAT(COUNT(i.id_integrante) * 20, '%') as porcentaje_grupo,
-ROW_NUMBER() OVER (PARTITION BY g.nombre ORDER BY COUNT(i.id_integrante) DESC) AS rn
-FROM ESTUDIANTE_GRUPO_ROL egr
-JOIN ESTUDIANTE i ON (egr.id_estudiante = i.id_integrante)
-JOIN GRUPO g ON (egr.id_grupo = g.id_grupo)
-JOIN ESTUDIANTE_MATERIA em ON (i.id_integrante = em.id_estudiante)
-JOIN MATERIA m ON (em.id_materia = m.id_materia)
-GROUP BY m.nombre, g.nombre;
+SELECT nombre_materia, nombre_grupo, total_alumno, porcentaje_grupo FROM (
+	SELECT m.nombre AS nombre_materia, g.nombre AS nombre_grupo, 
+	COUNT(i.id_integrante) as total_alumno, 
+	CONCAT(COUNT(i.id_integrante) * 20, '%') as porcentaje_grupo,
+	ROW_NUMBER() OVER (PARTITION BY g.nombre ORDER BY COUNT(i.id_integrante) DESC, m.nombre) AS rn
+	FROM ESTUDIANTE_GRUPO_ROL egr
+	JOIN ESTUDIANTE i ON (egr.id_estudiante = i.id_integrante)
+	JOIN GRUPO g ON (egr.id_grupo = g.id_grupo)
+	JOIN ESTUDIANTE_MATERIA em ON (i.id_integrante = em.id_estudiante)
+	JOIN MATERIA m ON (em.id_materia = m.id_materia)
+	GROUP BY m.nombre, g.nombre
+) sub WHERE rn = 1;
+
 
 /* d) Crear un reporte que identifique alumnos con experiencia
 significativa en temas de bases de datos o actividades tecnológicas,
