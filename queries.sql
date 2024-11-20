@@ -5,7 +5,7 @@ SELECT Localidad, Hobby_mas_comun, Total_alumnos FROM (
         l.nombre AS Localidad, 
         h.nombre AS Hobby_mas_comun, 
         COUNT(hi.id_hobby) AS Total_alumnos,
-        ROW_NUMBER() OVER (PARTITION BY l.nombre ORDER BY COUNT(hi.id_hobby) DESC) AS rn
+        ROW_NUMBER() OVER (PARTITION BY l.nombre ORDER BY COUNT(hi.id_hobby)DESC, h.nombre ) AS rn
     FROM HOBBY_INTEGRANTE hi
     JOIN INTEGRANTE i ON hi.id_integrante = i.id_integrante
     JOIN HOBBY h ON hi.id_hobby = h.id_hobby
@@ -50,18 +50,14 @@ clasificándolos como posibles mentores para el resto de los
 compañeros. TOP 5
 */
 SELECT 
-	i.apellido AS Alumno,
-	IF(e.db_no_relacional = 1, 'Sí', 'No') AS "Experiencia BD Relacional",
-	IF(e.db_relacional = 1, 'Sí', 'No') AS "Experiencia BD No Relacional",
-    t.nombre AS Actividad
+i.apellido AS Alumno,
+IF(e.db_no_relacional = 1, 'Sí', 'No') AS "Experiencia BD Relacional",
+IF(e.db_relacional = 1, 'Sí', 'No') AS "Experiencia BD No Relacional",
+t.nombre AS Actividad
 FROM INTEGRANTE AS i
 JOIN ESTUDIANTE AS e ON (e.id_integrante = i.id_integrante)
 JOIN TRABAJO AS t ON (t.id_trabajo = i.id_trabajo)
-WHERE 
-	e.db_no_relacional = 1 
-    AND 
-    e.db_relacional = 1 
-    OR
-    t.nombre in ("Backend", "IT", "Data analytics", "Desarrollador aplicaciones")
-LIMIT 5
-;
+WHERE e.db_no_relacional = 1 
+AND  e.db_relacional = 1 
+OR t.nombre in ("Backend", "IT", "Data analytics", "Desarrollador aplicaciones")
+LIMIT 5;
