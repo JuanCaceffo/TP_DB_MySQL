@@ -61,3 +61,18 @@ WHERE e.db_no_relacional = 1
 AND  e.db_relacional = 1 
 OR t.nombre in ("Backend", "IT", "Data analytics", "Desarrollador aplicaciones")
 LIMIT 5;
+
+-- Desarrollar consultas avanzadas 
+-- a) Listar la cantidad de alumnos por localidad junto con el número de
+-- materias promedio en las que están inscriptos, lo cual permitiría
+-- analizar la carga académica en diferentes áreas geográficas.
+SELECT 
+l.nombre AS Localidad,
+ROUND(COUNT(em.id_materia) / COUNT(DISTINCT e.id_integrante), 2) AS Promedio_materias,
+COUNT(DISTINCT e.id_integrante) AS Total_alumnos
+FROM INTEGRANTE AS i
+JOIN ESTUDIANTE AS e ON i.id_integrante = e.id_integrante
+JOIN ESTUDIANTE_MATERIA AS em ON e.id_integrante = em.id_estudiante
+JOIN LOCALIDAD AS l ON i.id_localidad = l.id_localidad
+GROUP BY l.nombre
+ORDER BY Total_alumnos DESC;
