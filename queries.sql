@@ -45,13 +45,10 @@ SELECT nombre_materia, nombre_grupo, total_alumno, porcentaje_grupo FROM (
 ) sub WHERE rn = 1;
 
 
-/* d) Crear un reporte que identifique alumnos con experiencia
-significativa en temas de bases de datos o actividades tecnológicas,
-clasificándolos como posibles mentores para el resto de los
-compañeros. TOP 5
-*/
-SELECT 
-i.apellido AS Alumno,
+-- d) Crear un reporte que identifique alumnos con experiencia
+-- significativa en temas de bases de datos o actividades tecnológicas,
+-- clasificándolos como posibles mentores para el resto de los compañeros. TOP 5
+SELECT i.apellido AS Alumno,
 IF(e.db_no_relacional = 1, 'Sí', 'No') AS "Experiencia BD Relacional",
 IF(e.db_relacional = 1, 'Sí', 'No') AS "Experiencia BD No Relacional",
 t.nombre AS Actividad
