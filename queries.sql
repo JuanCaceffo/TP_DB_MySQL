@@ -43,3 +43,25 @@ JOIN GRUPO g ON (egr.id_grupo = g.id_grupo)
 JOIN ESTUDIANTE_MATERIA em ON (i.id_integrante = em.id_estudiante)
 JOIN MATERIA m ON (em.id_materia = m.id_materia)
 GROUP BY m.nombre, g.nombre;
+
+/* d) Crear un reporte que identifique alumnos con experiencia
+significativa en temas de bases de datos o actividades tecnológicas,
+clasificándolos como posibles mentores para el resto de los
+compañeros. TOP 5
+*/
+SELECT 
+	i.apellido AS Alumno,
+	IF(e.db_no_relacional = 1, 'Sí', 'No') AS "Experiencia BD Relacional",
+	IF(e.db_relacional = 1, 'Sí', 'No') AS "Experiencia BD No Relacional",
+    t.nombre AS Actividad
+FROM INTEGRANTE AS i
+JOIN ESTUDIANTE AS e ON (e.id_integrante = i.id_integrante)
+JOIN TRABAJO AS t ON (t.id_trabajo = i.id_trabajo)
+WHERE 
+	e.db_no_relacional = 1 
+    AND 
+    e.db_relacional = 1 
+    OR
+    t.nombre in ("Backend", "IT", "Data analytics", "Desarrollador aplicaciones")
+LIMIT 5
+;
