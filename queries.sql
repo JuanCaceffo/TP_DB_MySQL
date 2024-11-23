@@ -102,3 +102,8 @@ WHERE estudiante_mentor.db_relacional > estudiante_mentee.db_relacional
 OR estudiante_mentor.db_no_relacional > estudiante_mentee.db_no_relacional
 GROUP BY mentor_integrante.id_integrante, mentee_integrante.id_integrante
 ORDER BY Mentor_Apellido, Mentee_Apellido;
+
+CREATE INDEX idx_hobby_integrante ON HOBBY_INTEGRANTE(id_integrante, id_hobby);
+CREATE INDEX idx_estudiante_materia ON ESTUDIANTE_MATERIA(id_estudiante, id_materia);
+CREATE INDEX idx_integrante_localidad ON INTEGRANTE(id_localidad);
+
